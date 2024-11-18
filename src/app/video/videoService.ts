@@ -9,6 +9,8 @@ import {
   getVideoById,
   getVideoCount,
   updateVideo,
+  updateVideoLikes,
+  updateVideoViews,
 } from "./videoRepository";
 
 export const getVideoService = async ({
@@ -23,13 +25,13 @@ export const getVideoService = async ({
     getVideoCount({ search, categoryId, uploaderId }),
   ]);
 
-  if (!videos.length) {
-    return new ErrorApp(
-      MESSAGES.ERROR.NOT_FOUND.VIDEO,
-      404,
-      MESSAGE_CODE.NOT_FOUND
-    );
-  }
+  // if (!videos.length) {
+  //   return new ErrorApp(
+  //     MESSAGES.ERROR.NOT_FOUND.VIDEO,
+  //     404,
+  //     MESSAGE_CODE.NOT_FOUND
+  //   );
+  // }
 
   const response = { data: videos, meta: Meta(page, perPage, totalData) };
   return response;
@@ -89,8 +91,6 @@ export const updateVideoService = async ({
   description,
   thumbnailUrl,
   category,
-  views,
-  likes,
 }: Partial<VideoModelTypes>) => {
   if (!id) {
     return new ErrorApp(
@@ -125,28 +125,69 @@ export const updateVideoService = async ({
   if (thumbnailUrl !== undefined) updateFields.thumbnailUrl = thumbnailUrl;
   if (category !== undefined) updateFields.category = category;
   if (thumbnailUrl !== undefined) updateFields.thumbnailUrl = thumbnailUrl;
-  if (views !== undefined) {
-    const viewsInt = parseInt(String(views), 10);
-    if (isNaN(viewsInt) || viewsInt < 0) {
-      return new ErrorApp(
-        MESSAGES.ERROR.INVALID.VIEWS,
-        400,
-        MESSAGE_CODE.BAD_REQUEST
-      );
-    }
-  };
-  if (likes !== undefined) {
-    const likesInt = parseInt(String(likes), 10);
-    if (isNaN(likesInt) || likesInt < 0) {
-      return new ErrorApp(
-        MESSAGES.ERROR.INVALID.LIKES,
-        400,
-        MESSAGE_CODE.BAD_REQUEST
-      );
-    }
-  };
 
   const response = await updateVideo(id, updateFields);
+  return response;
+};
+
+export const updateVideoViewsService = async (id: string) => {
+  if (!id) {
+    return new ErrorApp(
+      MESSAGES.ERROR.INVALID.ID,
+      400,
+      MESSAGE_CODE.BAD_REQUEST
+    );
+  }
+
+  const video = await getVideoById(id);
+  if (!video) {
+    return new ErrorApp(
+      MESSAGES.ERROR.NOT_FOUND.VIDEO,
+      404,
+      MESSAGE_CODE.NOT_FOUND
+    );
+  }
+  // const product = await getProductById(video.productId);
+  // if (!product) {
+  //   return new ErrorApp(
+  //     MESSAGES.ERROR.NOT_FOUND.PRODUCT,
+  //     404,
+  //     MESSAGE_CODE.NOT_FOUND
+  //   );
+  // }
+
+  const response = await updateVideoViews(id);
+  return response;
+};  
+
+export const updateVideoLikesService = async (id: string) => {
+  if (!id) {
+    return new ErrorApp(
+      MESSAGES.ERROR.INVALID.ID,
+      400,
+      MESSAGE_CODE.BAD_REQUEST
+    );
+  }
+
+  const video = await getVideoById(id);
+  if (!video) {
+    return new ErrorApp(
+      MESSAGES.ERROR.NOT_FOUND.VIDEO,
+      404,
+      MESSAGE_CODE.NOT_FOUND
+    );
+  }
+
+  // const product = await getProductById(video.productId);
+  // if (!product) {
+  //   return new ErrorApp(
+  //     MESSAGES.ERROR.NOT_FOUND.PRODUCT,
+  //     404,
+  //     MESSAGE_CODE.NOT_FOUND
+  //   );
+  // }
+
+  const response = await updateVideoLikes(id);
   return response;
 };
 

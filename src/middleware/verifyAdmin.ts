@@ -2,10 +2,10 @@ import { NextFunction, type Response, type Request } from "express";
 import { TokenExpiredError, decode, verify } from 'jsonwebtoken';
 import { MESSAGES } from "../utils/Messages";
 import { MESSAGE_CODE } from "../utils/MessageCode";
-import { getUserById } from "../app/user/userRepository";
 import { HandleResponseApi } from "../utils/Response.Mapper";
 import { environment } from "../config/dotenvConfig";
 import { TokenDecodeInterface } from "./tokenTypes";
+// import { getUserById } from "../../test/user/userRepository";
 
 export const VerifyAdmin = (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
@@ -23,19 +23,19 @@ export const VerifyAdmin = (req: Request, res: Response, next: NextFunction) => 
         if (!(decoded as TokenDecodeInterface)?.id) {
             return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.RECOGNIZED)
         }
-        if ((decoded as TokenDecodeInterface)?.id) {
-            const { id } = decoded as TokenDecodeInterface
-            const getUser = await getUserById(id)
+        // if ((decoded as TokenDecodeInterface)?.id) {
+        //     const { id } = decoded as TokenDecodeInterface
+        //     const getUser = await getUserById(id)
 
-            if (!getUser) {
-                return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.RECOGNIZED)
-            }
+        //     if (!getUser) {
+        //         return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.RECOGNIZED)
+        //     }
             
-            if (getUser.role !== "admin") {
-                return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.ROLE_ADMIN)
-            }
-        }
-        req.params.userId = decoded?.id;
+        //     if (getUser.role !== "admin") {
+        //         return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.ROLE_ADMIN)
+        //     }
+        // }
+        // req.params.userId = decoded?.id;
         next()
     })
 

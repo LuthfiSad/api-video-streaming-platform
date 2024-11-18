@@ -2,7 +2,7 @@ import * as bcrypt from "bcrypt";
 import { MESSAGE_CODE } from "../../utils/MessageCode";
 import { MESSAGES } from "../../utils/Messages";
 import { ErrorApp } from "../../utils/Response.Mapper";
-import { createUser, getUserByEmail, getUserById } from "../user/userRepository";
+import { createUser, getUserByEmail, getUserById } from "../../../test/user/userRepository";
 import { LoginAuthBodyDTO, RegisterAuthBodyDTO } from "./authTypes";
 import { registerValidate } from "./authValidate";
 import jwt, { decode } from "jsonwebtoken";

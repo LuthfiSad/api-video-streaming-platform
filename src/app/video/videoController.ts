@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { MESSAGES } from "../../utils/Messages";
 import { ErrorApp, HandleResponseApi } from "../../utils/Response.Mapper";
-import { createVideoService, deleteVideoService, getVideoByIdService, getVideoService, updateVideoService } from "./videoService";
+import { createVideoService, deleteVideoService, getVideoByIdService, getVideoService, updateVideoLikesService, updateVideoService, updateVideoViewsService } from "./videoService";
 import { MESSAGE_CODE } from "../../utils/MessageCode";
 
 export const getVideoController = async (
@@ -93,8 +93,34 @@ export const updateVideoController = async (req: Request, res: Response, next: N
     return;
   }
 
-  HandleResponseApi(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.VIDEO.UPDATE, video);
+  HandleResponseApi(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.VIDEO.UPDATE);
 };
+
+export const updateViewsVideoController = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params; // Gabungkan data video dengan id
+
+  const video = await updateVideoViewsService(id);
+
+  if (video instanceof ErrorApp) {
+    next(video);
+    return;
+  }
+
+  HandleResponseApi(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.VIEWS);
+}
+
+export const updateLikesVideoController = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params; // Gabungkan data video dengan id
+
+  const video = await updateVideoLikesService(id);
+
+  if (video instanceof ErrorApp) {
+    next(video);
+    return;
+  }
+
+  HandleResponseApi(res, 200, MESSAGE_CODE.SUCCESS, MESSAGES.SUCCESS.LIKES);
+}
 
 export const deleteVideoController = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;

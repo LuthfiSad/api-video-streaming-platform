@@ -72,6 +72,8 @@ export const MESSAGES = {
   },
   SUCCESS: {
     LOGIN: "Success to login",
+    LIKES: "Likes successfully",
+    VIEWS: "Views successfully",
     VIDEO: {
       GET: "Success to fetch video",
       DELETE: "Success to delete video",

@@ -6,29 +6,27 @@ export const getVideo = async ({
   page,
   perPage,
   search,
-  categoryId,
-  uploaderId,
-}: IFilterVideo) => {
+}: // categoryId,
+// uploaderId,
+IFilterVideo) => {
   return await prisma.video.findMany({
     where: {
-      video: {
-        title: {
-          contains: search,
-          mode: "insensitive",
-        },
-        description: {
-          contains: search,
-          mode: "insensitive",
-        },
+      title: {
+        contains: search,
+        mode: "insensitive",
       },
-      category: {
-        id: categoryId,
+      description: {
+        contains: search,
+        mode: "insensitive",
       },
-      uploader: {
-        id: uploaderId,
-      },
+      // category: {
+      //   id: categoryId,
+      // },
+      // uploader: {
+      //   id: uploaderId,
+      // },
     },
-    videoBy: {
+    orderBy: {
       createdAt: "desc",
     },
     take: perPage,
@@ -39,27 +37,25 @@ export const getVideo = async ({
 // Menghitung jumlah pesanan
 export const getVideoCount = async ({
   search,
-  categoryId,
-  uploaderId,
-}: IFilterVideo) => {
+}: // categoryId,
+// uploaderId,
+IFilterVideo) => {
   return await prisma.video.count({
     where: {
-      video: {
-        title: {
-          contains: search,
-          mode: "insensitive",
-        },
-        description: {
-          contains: search,
-          mode: "insensitive",
-        },
+      title: {
+        contains: search,
+        mode: "insensitive",
       },
-      category: {
-        id: categoryId,
+      description: {
+        contains: search,
+        mode: "insensitive",
       },
-      uploader: {
-        id: uploaderId,
-      },
+      // category: {
+      //   id: categoryId,
+      // },
+      // uploader: {
+      //   id: uploaderId,
+      // },
     },
   });
 };
@@ -97,8 +93,6 @@ export const updateVideo = async (
     description?: string;
     thumbnailUrl?: string;
     category?: string;
-    views?: number;
-    likes?: number;
   }
 ) => {
   return await prisma.video.update({
@@ -108,6 +102,32 @@ export const updateVideo = async (
     data,
   });
 };
+
+export const updateVideoViews = async (id: string) => {
+  return await prisma.video.update({
+    where: {
+      id,
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+  });
+}
+
+export const updateVideoLikes = async (id: string) => {
+  return await prisma.video.update({
+    where: {
+      id,
+    },
+    data: {
+      likes: {
+        increment: 1,
+      },
+    },
+  });
+}
 
 // Menghapus pesanan
 export const deleteVideo = async (id: string) => {
