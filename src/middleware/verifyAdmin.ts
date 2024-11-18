@@ -1,13 +1,13 @@
-import { NextFunction, type Response } from "express";
+import { NextFunction, type Response, type Request } from "express";
 import { TokenExpiredError, decode, verify } from 'jsonwebtoken';
 import { MESSAGES } from "../utils/Messages";
 import { MESSAGE_CODE } from "../utils/MessageCode";
 import { getUserById } from "../app/user/userRepository";
 import { HandleResponseApi } from "../utils/Response.Mapper";
 import { environment } from "../config/dotenvConfig";
-import { RequestWithUserId, TokenDecodeInterface } from "./tokenTypes";
+import { TokenDecodeInterface } from "./tokenTypes";
 
-export const VerifyAdmin = (req: RequestWithUserId, res: Response, next: NextFunction) => {
+export const VerifyAdmin = (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.UNAUTHORIZED.FORBIDDEN)
     }
@@ -35,7 +35,7 @@ export const VerifyAdmin = (req: RequestWithUserId, res: Response, next: NextFun
                 return HandleResponseApi(res, 401, MESSAGE_CODE.UNAUTHORIZED, MESSAGES.ERROR.INVALID.ROLE_ADMIN)
             }
         }
-        req.userId = decoded?.id;
+        req.params.userId = decoded?.id;
         next()
     })
 
